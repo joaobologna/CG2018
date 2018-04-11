@@ -1,2 +1,4 @@
 # CG2018
-Trabalho de Computação Gráfica - UFSCar 2018/01
+João Paulo Bologna    - 609684 
+João Paulo Franscisco - 587370
+Matheus Takeshi       - 587400
