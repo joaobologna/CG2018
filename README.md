@@ -1,6 +1,6 @@
-#Trabalho CG
+# Trabalho CG
 
-###Integrantes
+### Integrantes
 
 João Paulo Bologna    - 609684
 
