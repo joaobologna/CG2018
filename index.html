@@ -1,0 +1,76 @@
+<html>
+	<head>
+		<title>Projeto CG - Fase 01</title>
+		<style>
+			body { margin: 0; overflow: 0; }
+			canvas { width: 100%; height: 100%; };
+		</style>
+	</head>
+	<body>
+		<canvas id="myCanvas"></canvas>
+		<script src="js/three.js"></script>
+		
+		<script>
+		// (Como importar um .obj e configura-lo)
+		// https://www.youtube.com/watch?v=mqjwgTAGQRY 
+		
+		// Declaracao das variaveis
+		var renderer,
+			scene,
+			camera,
+			light,
+			light2,
+			mesh,
+			materials,
+			loader,
+			myCanvas = document.getElementById('myCanvas');
+			
+			renderer = new THREE.WebGLRenderer({
+			  canvas: myCanvas, 
+			  antialias: true
+			});
+			
+			// Renderer
+			renderer.setClearColor(0x000000);
+			renderer.setPixelRatio(window.devicePixelRatio);
+			renderer.setSize(window.innerWidth, window.innerHeight);
+			
+			// Camera
+			camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.1, 1000);
+			
+			// Cena
+			scene = new THREE.Scene();
+			
+			// Luzes
+			light = new THREE.AmbientLight(0xffffff, 0.5);
+			//scene.add(light);
+
+			light2 = new THREE.PointLight(0xffffff, 0.5);
+			//scene.add(light2);
+			
+			// Para que funcione no Google Chrome (instrucoes)
+			// https://threejs.org/docs/#manual/introduction/How-to-run-things-locally
+			loader = new THREE.JSONLoader();
+			loader.load('json/cat.json', handle_load);
+			
+			function handle_load(geometry, materials) {
+				materials = new THREE.MeshNormalMaterial();
+				mesh = new THREE.Mesh(geometry, materials);
+				scene.add(mesh);
+				scene.position.z = -10;
+			}
+			
+			// Loop do Render
+			render();
+			
+			// Metodo Render
+			function render() {
+				if(mesh)
+					mesh.rotation.y += 0.1;
+					
+				renderer.render(scene, camera);
+				requestAnimationFrame(render);	
+			}	
+		</script>
+	</body>
+</html>
