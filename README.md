@@ -17,15 +17,15 @@ Nesta fase, um objeto 3D (optamos por um gato obeso), de tamanho ideal para o vo
 
 
 ## Implementação:
-O código foi feito em JavaScript, com auxílio da API [Three.js], que facilita o trabalho com objetos 3D.
+O código foi feito em JavaScript, com auxílio da API [Three.js] (a qual facilita o trabalho com objetos 3D).
 
 Inicialmente nosso objeto foi baixado do site [Free3D] e posteriormente convertido para json.
 
-Para permitir uma melhor visualização do objeto, foi implementada uma rotação com velocidade constante.
+Para permitir uma melhor visualização do objeto, foi aplicado redimensionamento e implementada uma rotação com velocidade constante.
 
 
 ## Como executar:
-Para rodar o projeto é necessário que o navegador permita a execução do código fonte que está localizado em outro arquivo.
+Para rodar o projeto é necessário que o navegador permita a execução de arquivo externo à pagina HTML (necessário para carregar o objeto).
 
 Siga os passos listados abaixo, em seu navegador de preferência:
 
