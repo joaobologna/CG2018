@@ -1,7 +1,7 @@
 # Trabalho de CG 2018/1
 
 ## Descrição:
-Este repositório é o projeto da disciplina de Computação Gráfica (atualmente referente à fase 1) do ano de 2018 do curso CC-So - Ciência da Computação da UFSCar - campus Sorocaba.
+Este repositório é o projeto da disciplina de **Computação Gráfica** (atualmente referente à fase 1) do ano de 2018 do curso **CC-So - Ciência da Computação** da **UFSCar** - campus Sorocaba.
 
 
 ## Integrantes:
