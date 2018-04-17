@@ -23,6 +23,8 @@ Inicialmente nosso objeto foi baixado do site [Free3D] e posteriormente converti
 
 Para permitir uma melhor visualização do objeto, foi aplicado redimensionamento e implementada uma rotação com velocidade constante.
 
+É possivel realizar a rotação do objeto pelo teclado utilizado: A, S, D, W.
+
 
 ## Como executar:
 Para rodar o projeto é necessário que o navegador permita a execução de arquivo externo à pagina HTML (necessário para carregar o objeto).

@@ -9,69 +9,77 @@
 	<body>
 		<canvas id="myCanvas"></canvas>
 		<script src="js/three.js"></script>
+		<script src="js/THREEx.KeyboardState.js"></script>
 		
 		<script>
-		// (Como importar um .obj e configura-lo)
-		// https://www.youtube.com/watch?v=mqjwgTAGQRY 
-		
-		// Declaracao das variaveis
-		var renderer,
-			scene,
-			camera,
-			light,
-			light2,
-			mesh,
-			materials,
-			loader,
-			myCanvas = document.getElementById('myCanvas');
+			var keyboard = new THREEx.KeyboardState();
 			
-			renderer = new THREE.WebGLRenderer({
-			  canvas: myCanvas, 
-			  antialias: true
-			});
-			
-			// Renderer
-			renderer.setClearColor(0x000000);
-			renderer.setPixelRatio(window.devicePixelRatio);
-			renderer.setSize(window.innerWidth, window.innerHeight);
-			
-			// Camera
-			camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.1, 1000);
-			
-			// Cena
-			scene = new THREE.Scene();
-			
-			// Luzes
-			light = new THREE.AmbientLight(0xffffff, 0.5);
-			//scene.add(light);
+			init();		
+			animate();
 
-			light2 = new THREE.PointLight(0xffffff, 0.5);
-			//scene.add(light2);
+			function init() {
+				// Renderer
+				renderer = create_renderer();
+				
+				// Camera
+				camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.1, 1000);
 			
-			// Para que funcione no Google Chrome (instrucoes)
-			// https://threejs.org/docs/#manual/introduction/How-to-run-things-locally
-			loader = new THREE.JSONLoader();
-			loader.load('json/cat.json', handle_load);
+				// Cena
+				scene = new THREE.Scene();
+
+				// Carregar gato
+				load_obj('json/cat.json');
+
+				function create_renderer() {
+					var myCanvas = document.getElementById('myCanvas');
 			
-			function handle_load(geometry, materials) {
-				materials = new THREE.MeshNormalMaterial();
-				mesh = new THREE.Mesh(geometry, materials);
-				mesh.scale.set(4,2,2); // alteração do tamanho do objeto para melhor visualização
-				scene.add(mesh);
-				scene.position.z = -10;
+					renderer = new THREE.WebGLRenderer({
+					  canvas: myCanvas, 
+					  antialias: true
+					});
+			
+					// Renderer
+					renderer.setClearColor(0x000000);
+					renderer.setPixelRatio(window.devicePixelRatio);
+					renderer.setSize(window.innerWidth, window.innerHeight);
+					
+					return renderer;				
+				}
+
+				function load_obj(path) {
+					loader = new THREE.JSONLoader();
+					loader.load(path, handle_load);
+			
+					function handle_load(geometry, materials) {
+						materials = new THREE.MeshNormalMaterial();
+						mesh = new THREE.Mesh(geometry, materials);
+						mesh.scale.set(4, 2, 2); // alteração do tamanho do objeto para melhor visualização
+						scene.add(mesh);
+						scene.position.z = -10;
+					}			
+				}		
 			}
 			
-			// Loop do Render
-			render();
-			
-			// Metodo Render
+			function animate() {
+				requestAnimationFrame(animate);
+				rotation();
+				render();	
+			}
+
 			function render() {
-				if(mesh)
-					mesh.rotation.y += 0.01;
-					
+				renderer.clear();
 				renderer.render(scene, camera);
-				requestAnimationFrame(render);	
-			}	
+			}
+
+			function rotation() {
+				var speed = 0.1;
+
+				if(keyboard.pressed("D")) { mesh.rotation.y += speed; }
+				if(keyboard.pressed("A")) { mesh.rotation.y -= speed; }
+				if(keyboard.pressed("W")) { mesh.rotation.x += speed; }
+				if(keyboard.pressed("S")) { mesh.rotation.x -= speed; }
+			}
+	
 		</script>
 	</body>
 </html>
