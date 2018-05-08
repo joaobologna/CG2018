@@ -27,8 +27,11 @@
 				// Cena
 				scene = new THREE.Scene();
 
-				// Carregar gato
-				load_obj('json/cat.json');
+				// Carregar gato, informando escala e posição na tela
+				load_obj('json/cat.json', 4, 2, 2, -1);
+
+				// Carregar rato, informando escala e posição na tela
+				load_obj('json/rat.js', 1, 0.5, 0.5, 1);
 
 				function create_renderer() {
 					var myCanvas = document.getElementById('myCanvas');
@@ -46,17 +49,18 @@
 					return renderer;				
 				}
 
-				function load_obj(path) {
+				function load_obj(path, largura, altura, comprimento, pX) {
 					loader = new THREE.JSONLoader();
 					loader.load(path, handle_load);
 			
 					function handle_load(geometry, materials) {
 						materials = new THREE.MeshNormalMaterial();
 						mesh = new THREE.Mesh(geometry, materials);
-						mesh.scale.set(4, 2, 2); // alteração do tamanho do objeto para melhor visualização
+						mesh.scale.set(largura, altura, comprimento); // alteração do tamanho do objeto
+						mesh.position.x = pX;
 						scene.add(mesh);
 						scene.position.z = -10;
-					}			
+					}
 				}		
 			}
 			
