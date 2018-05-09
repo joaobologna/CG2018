@@ -23,15 +23,16 @@
 				
 				// Camera
 				camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.1, 1000);
+				camera.position.set(Math.random(),Math.random(),Math.random());
 			
 				// Cena
 				scene = new THREE.Scene();
 
 				// Carregar gato, informando escala e posição na tela
-				load_obj('json/cat.json', 5, 2, 2, -2, 0, 1);
+				load_obj('json/cat.json', 10, 4, 4, -4, 0, 1.4);
 
 				// Carregar rato, informando escala e posição na tela
-				load_obj('json/rat.js', 0.4, 0.5, 0.5, 1, 0.6, 0.7);
+				load_obj('json/rat.js', 0.8, 1, 1, 4, 0.6, 0.7);
 
 				function create_renderer() {
 					var myCanvas = document.getElementById('myCanvas');
@@ -73,12 +74,18 @@
 			}
 
 			function render() {
+
+				var timer = Date.now() * 0.001;
+				camera.position.x = Math.cos (timer) * 15;
+				camera.position.z = Math.sin (timer) * 15;
+				camera.lookAt(scene.position);
+
 				renderer.clear();
 				renderer.render(scene, camera);
 			}
 
 			function rotation() {
-				var speed = 0.1;
+				var speed = 0.05;
 
 				if(keyboard.pressed("D")) { mesh.rotation.y += speed; }
 				if(keyboard.pressed("A")) { mesh.rotation.y -= speed; }
