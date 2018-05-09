@@ -11,9 +11,14 @@ Este repositório é o projeto da disciplina de **Computação Gráfica** (atual
 
 
 ## Objetivo:
-Nesta fase, um objeto 3D (optamos por um gato obeso), de tamanho ideal para o volume de visão, é exibido na tela, conforme ilustrado:
+Fase 1: Nesta fase, um objeto 3D (optamos por um gato obeso), de tamanho ideal para o volume de visão, é exibido na tela, conforme ilustrado:
 
-![](print.png)
+![](fase1.png)
+
+Fase 2: Nesta fase foi inserido um novo objeto 3D (optamos por um rato), realizado transformação de escala e rotação dos objetos, além da implementação de deslocamento da câmera ao redor dos objetos, conforme ilustrado:
+
+![](fase1.png)
+
 
 
 ## Implementação:
@@ -23,7 +28,7 @@ Inicialmente nosso objeto foi baixado do site [Free3D] e posteriormente converti
 
 Para permitir uma melhor visualização do objeto, foi aplicado redimensionamento e implementada uma rotação com velocidade constante.
 
-É possivel realizar a rotação do objeto pelo teclado utilizado: A, S, D, W.
+É possivel realizar a rotação do rato pelo teclado utilizado: A, S, D, W.
 
 
 ## Como executar:
