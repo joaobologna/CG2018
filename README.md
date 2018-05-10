@@ -1,7 +1,7 @@
 # Trabalho de CG 2018/1
 
 ## Descrição:
-Este repositório é o projeto da disciplina de **Computação Gráfica** (atualmente referente à fase 1) do ano de 2018 do curso **CC-So - Ciência da Computação** da **UFSCar** - campus Sorocaba.
+Este repositório é o projeto da disciplina de **Computação Gráfica** (atualmente referente à fase 2) do ano de 2018 do curso **CC-So - Ciência da Computação** da **UFSCar** - campus Sorocaba.
 
 
 ## Integrantes:
@@ -18,7 +18,6 @@ Fase 1: Nesta fase, um objeto 3D (optamos por um gato obeso), de tamanho ideal p
 Fase 2: Nesta fase foi inserido um novo objeto 3D (optamos por um rato), realizado transformação de escala e rotação dos objetos, além da implementação de deslocamento da câmera ao redor dos objetos, conforme ilustrado:
 
 ![](fase2.png)
-
 
 
 ## Implementação:
