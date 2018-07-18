@@ -19,6 +19,10 @@ Fase 2: Nesta fase foi inserido um novo objeto 3D (optamos por um rato), realiza
 
 ![](fase2.png)
 
+Fase 3: Inserindo possibilidade de chavear entre camerâs. 
+* Pressionando 1 - Câmera lateral. 
+* Pressionando 2 - Câmera superior.
+
 
 ## Implementação:
 O código foi feito em JavaScript, com auxílio da API [Three.js] (a qual facilita o trabalho com objetos 3D).
