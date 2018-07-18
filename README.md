@@ -19,7 +19,7 @@ Fase 2: Nesta fase foi inserido um novo objeto 3D (optamos por um rato), realiza
 
 ![](fase2.png)
 
-Fase 3: Inserindo possibilidade de chavear entre camerâs. 
+Fase 3: Inserindo possibilidade de chavear entre câmeras. 
 * Pressionando 1 - Câmera lateral. 
 * Pressionando 2 - Câmera superior.
 
