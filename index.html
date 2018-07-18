@@ -34,10 +34,10 @@
 				// Cena
 				scene = new THREE.Scene();
 
-				load_obj('json/cat.json', 10, 4, 4, -4, 0, 0, 1.6);
-				load_obj('json/rat.js', 0.8, 1, 1, 4, 0, 0, 1.6);
-				//load_obj('json/knife.js', 5, 0.5, 0.5, 4, 0, 0);
-				load_obj('json/cheese.js', 0.2, 0.2, 0.2, 10, -2, 0, 0);
+				load_obj('json/cat.json', [10, 4, 4], [-4, 0, 0], [0, 1.6, 0]);
+				load_obj('json/rat.js', [0.8, 1, 1], [4, 0, 0], [0, 1.6, 0]);
+				load_obj('json/knife.js', [0.007, 0.007, 0.007], [10, 2, 2], [10, 0, 0]);
+				load_obj('json/cheese.js', [0.2, 0.2, 0.2], [10, 0, -2], [0, 0 ,0]);
 
 				function create_renderer() {
 					var myCanvas = document.getElementById('myCanvas');
@@ -55,18 +55,20 @@
 					return renderer;				
 				}
 
-				function load_obj(path, largura, altura, comprimento, pX, pY, rotationX, rotationY) {
+				function load_obj(path, dimensions, position, rotation) {
 					loader = new THREE.JSONLoader();
 					loader.load(path, handle_load);
 			
 					function handle_load(geometry, materials) {
 						materials = new THREE.MeshNormalMaterial();
 						mesh = new THREE.Mesh(geometry, materials);
-						mesh.scale.set(largura, altura, comprimento); // alteração do tamanho do objeto
-						mesh.position.x = pX;
-						mesh.position.z = pY;	
-						mesh.rotation.x = rotationX;
-						mesh.rotation.y = rotationY;
+						mesh.scale.set(dimensions[0], dimensions[1], dimensions[2]); // alteração do tamanho do objeto
+						mesh.position.x = position[0];
+						mesh.position.y = position[1];
+						mesh.position.z = position[2];	
+						mesh.rotation.x = rotation[0];
+						mesh.rotation.y = rotation[1];
+						mesh.rotation.z = rotation[2];
 						scene.position.z = -10;
 						scene.add(mesh);
 					}
