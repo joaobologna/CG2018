@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>Projeto CG - Fase 01</title>
+		<title>Projeto CG - Fase 03</title>
 		<style>
 			body { margin: 0; overflow: 0; }
 			canvas { width: 100%; height: 100%; };
@@ -13,33 +13,35 @@
 		
 		<script>
 			var keyboard = new THREEx.KeyboardState();
+			var sideCameraEnabled = true;
 			
 			init();		
 			animate();
 
 			function init() {
-
-				var knifeCameraActive = false;
-
 				// Renderer
 				renderer = create_renderer();
 				
-				// Camera 1
-				cameraMouse = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.1, 1000);
-				cameraMouse.position.set(Math.random(),Math.random(),Math.random());
+				// Camera com visão superior
+				upCamera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 1000);
+				upCamera.position.set(5, 20, -10);
+				upCamera.rotation.x = -90 * Math.PI / 180;
 
-				// Camera 2
-				cameraKnife = new THREE.PerspectiveCamera(15, window.innerWidth / window.innerHeight, 0.1, 950);
-				cameraKnife.position.set(Math.random(),Math.random(),Math.random());
+				// Camera com visão lateral
+				sideCamera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 1000);
+				sideCamera.position.set(5, 0.6, 12);
 			
 				// Cena
 				scene = new THREE.Scene();
 
 				// Carregar gato, informando escala e posição na tela
-				load_obj('json/cat.json', 10, 4, 4, -4, 0, 1.4);
+				load_obj('json/cat.json', 10, 4, 4, -4, 0, 1.6);
 
 				// Carregar rato, informando escala e posição na tela
-				load_obj('json/rat.js', 0.8, 1, 1, 4, 0.6, 0.7);
+				load_obj('json/rat.js', 0.8, 1, 1, 4, 0, 1.6);
+
+				// Carregar faca, informando escala e posição na tela
+				load_obj('json/knife.js', 5, 1, 1, 4, 0, 0);
 
 				function create_renderer() {
 					var myCanvas = document.getElementById('myCanvas');
@@ -68,54 +70,31 @@
 						mesh.position.x = pX;
 						mesh.rotation.x = rotationX;
 						mesh.rotation.y = rotationY;
-						scene.add(mesh);
 						scene.position.z = -10;
+						scene.add(mesh);
 					}
 				}		
 			}
 			
 			function animate() {
 				requestAnimationFrame(animate);
-//				rotation();
 
-			if ( keyboard.pressed("1") )
-			{  knifeCameraActive = true;  }
-			if ( keyboard.pressed("2") )
-			{  knifeCameraActive = false;  }
+				if (keyboard.pressed("1"))
+					sideCameraEnabled = true;
+				if (keyboard.pressed("2"))
+					sideCameraEnabled = false;
 
 				render();	
 			}
 
 			function render() {
-
-
 				renderer.clear();
 
-			if (!knifeCameraActive)
-			{  renderer.render( scene, cameraKnife );  }
-			else
-			{
-/*	
-				var timer = Date.now() * 0.001;
-			  cameraMouse.position.x = Math.cos (timer) * 15;
-				cameraMouse.position.z = Math.sin (timer) * 15;
-				cameraMouse.lookAt(scene.position);
-*/
-	  		renderer.render( scene, cameraMouse ); 
+				if (sideCameraEnabled)
+					renderer.render(scene, sideCamera);
+				else
+		  			renderer.render(scene, upCamera); 
 			}
-
-				
-			}
-/*
-			function rotation() {
-				var speed = 0.05;
-
-				if(keyboard.pressed("D")) { mesh.rotation.y += speed; }
-				if(keyboard.pressed("A")) { mesh.rotation.y -= speed; }
-				if(keyboard.pressed("W")) { mesh.rotation.x += speed; }
-				if(keyboard.pressed("S")) { mesh.rotation.x -= speed; }
-			}
-*/	
 		</script>
 	</body>
 </html>
