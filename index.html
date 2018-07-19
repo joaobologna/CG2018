@@ -15,6 +15,12 @@
 			var keyboard = new THREEx.KeyboardState();
 			var sideCameraEnabled = true;
 var cat, rat, knife, cheese;			
+var position = 0;
+
+function positionVariance(){
+	position += 0.001
+	return position;
+}
 
 			init();		
 //animate();
@@ -100,32 +106,6 @@ setTimeout(function () {
 }, 500); // tempo necessário para o objeto ser carregado
 			}
 			
-			function curve(){
-					group = new THREE.Group();
-					group.add( )//
-
-					theCurve = new THREE.CubicBezierCurve3(
-					new THREE.Vector3( -2000, -150, 3500),
-					new THREE.Vector3( 0, -150, -500),
-					new THREE.Vector3( 0, -150, -500),
-					new THREE.Vector3( 2000, -150, 3500)
-				);
-				
-				var curveMaterial = new THREE.LineBasicMaterial({
-					transparent: true,
-					opacity: 0,
-				});
-				
-				var curveGeometry = new THREE.Geometry();
-				var curvePoints = theCurve.getPoints(50);
-				for (var i = 0; i < curvePoints.length; i++) {
-					curveGeometry.vertices.push(curvePoints[i]);
-				}
-				
-				var curveLine = new THREE.Line(curveGeometry, curveMaterial);
-				scene.add(curveLine)
-			}
-
 			function animate() {
 				requestAnimationFrame(animate);
 
@@ -140,7 +120,7 @@ setTimeout(function () {
 			function render() {
 				renderer.clear();
 
-				curve();
+rat.position.set(rat.position.x, rat.position.y+positionVariance(), cat.position.z)
 
 				if (sideCameraEnabled)
 					renderer.render(scene, sideCamera);
