@@ -11,19 +11,35 @@
 		<script src="js/three.js"></script>
 		<script src="js/THREEx.KeyboardState.js"></script>
 		
+		<script id="vertexShader" type="x-shader/x-vertex">
+		  varying vec3 vNormal;
+		  varying vec3 vViewPosition;
+		  uniform float timeDelta;
+		  void main() {
+			vec3 center = vec3(0.0, 0.0, 0.0);
+			vec3 p = position;
+			float distance = length(center - p);
+			p += sin(distance + timeDelta/1000.0)*0.5;
+			vec4 modelViewPosition = modelViewMatrix * vec4(p, 1.0);
+			vViewPosition = -modelViewPosition.xyz;
+			gl_Position = projectionMatrix * modelViewPosition;
+			vNormal = normalMatrix * normal;
+		  }
+		</script>
+		
 		<script>
 			var keyboard = new THREEx.KeyboardState();
 			var sideCameraEnabled = true;
-var cat, rat, knife, cheese;			
-var position = 0;
+			var cat, rat, knife, cheese;			
+			var position = 0;
 
-function positionVariance(){
-	position += 0.001
-	return position;
-}
+			function positionVariance(){
+				position += 0.001
+				return position;
+			}
 
 			init();		
-//animate();
+			//animate();
 
 			function init() {
 				// Renderer
@@ -40,6 +56,24 @@ function positionVariance(){
 			
 				// Cena
 				scene = new THREE.Scene();
+				
+				var uniforms = ({
+					timeDelta : {type: 'f', value: 0},
+					emissive : {type: 'c', value: new THREE.Color(0x5e807f)},
+					specular : {type: 'c', value: new THREE.Color(0xe09278)}
+				});
+				var phongShader = THREE.ShaderLib.phong;
+				
+				var mUniforms = THREE.UniformsUtils.merge([phongShader.uniforms, uniforms]);
+				
+				// define catMaterial
+				var catMaterial = new THREE.ShaderMaterial ({
+					uniforms : mUniforms,
+					vertexShader: document.getElementById( 'vertexShader' ).textContent,
+					fragmentShader: phongShader.fragmentShader,
+					lights: true,
+					side : THREE.DoubleSide
+				});
 
 				load_obj('json/cat.json', [10, 4, 4], [-4, 0, 0], [0, 1.6, 0]);
 				load_obj('json/rat.js', [0.8, 1, 1], [4, 0, 0], [0, 1.6, 0]);
@@ -77,37 +111,41 @@ function positionVariance(){
 						mesh.rotation.y = rotation[1];
 						mesh.rotation.z = rotation[2];
 						scene.position.z = -10;
-//scene.add(mesh);
+						//scene.add(mesh);
 
-switch(path){
-	case 'json/cat.json':
-		cat = mesh;
-	break;
-	case 'json/rat.js':
-		rat = mesh;
-	break;
-	case 'json/knife.js':
-		knife = mesh;
-	break;
-	case 'json/cheese.js':
-		cheese = mesh;
-	break;
-}
-
+						switch(path){
+							case 'json/cat.json':
+								cat = mesh;
+							break;
+							case 'json/rat.js':
+								rat = mesh;
+							break;
+							case 'json/knife.js':
+								knife = mesh;
+							break;
+							case 'json/cheese.js':
+								cheese = mesh;
+							break;
+						}
 					}
 				}
 
-setTimeout(function () {
-	scene.add(cat);
-	scene.add(rat);
-	scene.add(knife);
-	scene.add(cheese);
-	animate();
-}, 500); // tempo necessário para o objeto ser carregado
+				setTimeout(function () {
+					scene.add(cat);
+					scene.add(rat);
+					scene.add(knife);
+					scene.add(cheese);
+					animate();
+				}, 500); // tempo necessário para o objeto ser carregado
 			}
 			
+			var startTime = Date.now();
+			var timeDelta = 0;
+			
 			function animate() {
+				timeDelta = Date.now() - startTime;
 				requestAnimationFrame(animate);
+				// catMesh.material.uniforms.timeDelta.value = timeDelta;
 
 				if (keyboard.pressed("1"))
 					sideCameraEnabled = true;
@@ -120,7 +158,7 @@ setTimeout(function () {
 			function render() {
 				renderer.clear();
 
-rat.position.set(rat.position.x, rat.position.y+positionVariance(), cat.position.z)
+				rat.position.set(rat.position.x, rat.position.y+positionVariance(), cat.position.z)
 
 				if (sideCameraEnabled)
 					renderer.render(scene, sideCamera);
