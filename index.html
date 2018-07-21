@@ -10,6 +10,7 @@
 		<canvas id="myCanvas"></canvas>
 		<script src="js/three.js"></script>
 		<script src="js/THREEx.KeyboardState.js"></script>
+		<script src="js/OBJLoader.js"></script>
 		
 		<script id="vertexShader" type="x-shader/x-vertex">
 		  varying vec3 vNormal;
@@ -72,6 +73,11 @@
 				scene = new THREE.Scene();
 				scene.add(pathAlongCurveRat);
 				scene.add(pathAlongCurveCat);
+				
+				// Iluminacao
+				var light = new THREE.PointLight( 0xa5ccff, 1 );
+				light.position.set(300,300,0);
+				scene.add( light );
 
 				var uniforms = ({
 					timeDelta : {type: 'f', value: 0},
@@ -81,18 +87,14 @@
 				var phongShader = THREE.ShaderLib.phong;
 				
 				var mUniforms = THREE.UniformsUtils.merge([phongShader.uniforms, uniforms]);
-				
-				// define catMaterial
-				var catMaterial = new THREE.ShaderMaterial ({
-					uniforms : mUniforms,
-					vertexShader: document.getElementById( 'vertexShader' ).textContent,
-					fragmentShader: phongShader.fragmentShader,
-					lights: true,
-					side : THREE.DoubleSide
-				});
 
-				load_obj('json/cat.json', [10, 4, 4], [-4, 0, 0], [0, 1.6, 0]);
-				load_obj('json/rat.js', [0.8, 1, 1], [4, 0, 0], [0, 1.6, 0]);
+				load_obj2('obj/cat.obj', [10, 4, 4], [-4, 0, 0], [0, 1.6, 0]);
+				load_obj2('obj/rat.obj', [0.8, 1, 1], [4, 0, 0], [0, 1.6, 0]);
+				// load_obj2('obj/knife.obj', [0.007, 0.017, 0.007], [10, 2, 2], [5, 0, 0]);
+				// load_obj2('obj/cheese.obj', [0.5, 0.5, 0.5], [10, 0, -2], [0, 0 ,0]);
+
+				// load_obj('json/cat.json', [10, 4, 4], [-4, 0, 0], [0, 1.6, 0]);
+				// load_obj('json/rat.js', [0.8, 1, 1], [4, 0, 0], [0, 1.6, 0]);
 				load_obj('json/knife.js', [0.007, 0.007, 0.007], [10, 2, 2], [10, 0, 0]);
 				load_obj('json/cheese.js', [0.2, 0.2, 0.2], [10, 0, -2], [0, 0 ,0]);
 
@@ -110,6 +112,52 @@
 					renderer.setSize(window.innerWidth, window.innerHeight);
 					
 					return renderer;				
+				}
+
+				function load_obj2(path, dimensions, position, rotation) {
+				 var mesh2Material = new THREE.ShaderMaterial ({
+								uniforms : mUniforms,
+								vertexShader: document.getElementById( 'vertexShader' ).textContent,
+								fragmentShader: phongShader.fragmentShader,
+								lights: true,
+								side : THREE.DoubleSide
+							});
+				  var mesh2;
+				  var loader = new THREE.OBJLoader();
+
+				  loader.load(path, function ( object ) {
+				    object.traverse( function ( child ) {
+				      if ( child instanceof THREE.Mesh ) {
+				        console.log(child.geometry)
+				        var geo1 = child.geometry;
+				        mesh2 = new THREE.Mesh(geo1, mesh2Material);
+
+								mesh2.scale.set(dimensions[0], dimensions[1], dimensions[2]); // alteração do tamanho do objeto
+								mesh2.position.x = position[0];
+								mesh2.position.y = position[1];
+								mesh2.position.z = position[2];	
+								mesh2.rotation.x = rotation[0];
+								mesh2.rotation.y = rotation[1];
+								mesh2.rotation.z = rotation[2];
+								scene.position.z = -10;
+
+								switch(path){
+									case 'obj/cat.obj':
+										cat = mesh2;
+									break;
+									case 'obj/rat.obj':
+										rat = mesh2;
+									break;
+									case 'obj/knife.obj':
+										knife = mesh2;
+									break;
+									case 'obj/cheese.obj':
+										cheese = mesh2;
+									break;
+								}
+				      }
+				    });
+				  })
 				}
 
 				function load_obj(path, dimensions, position, rotation) {
@@ -145,6 +193,7 @@
 						}
 					}
 				}
+
 				preAnimate();
 			}
 			
