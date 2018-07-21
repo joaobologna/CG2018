@@ -122,16 +122,26 @@
 						}
 					}
 				}
-
-				setTimeout(function () {
-					scene.add(cat);
-					scene.add(rat);
-					scene.add(knife);
-					scene.add(cheese);
-					animate();
-				}, 500); // tempo necessário para o objeto ser carregado
+				preAnimate();
 			}
 			
+			// adiciona os objetos na cena apenas quando todos forem carregados
+			function preAnimate(){
+					setTimeout(function () {
+						if(cat == null || rat == null || knife  == null || cheese  == null){
+							preAnimate();
+						}
+						else{
+							scene.add(cat);
+							scene.add(rat);
+							scene.add(knife);
+							scene.add(cheese);
+							animate();
+						}
+					}, 1); // timeout (em ms), gasto quantas vezes forem necessárias, para que os objetos sejam carregados antes de serem utilizados
+			}
+
+
 			var startTime = Date.now();
 			var timeDelta = 0;
 			
