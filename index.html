@@ -31,15 +31,8 @@
 			var keyboard = new THREEx.KeyboardState();
 			var sideCameraEnabled = true;
 			var cat, rat, knife, cheese;			
-			var position = 0;
-
-			function positionVariance(){
-				position += 0.001
-				return position;
-			}
 
 			init();		
-			//animate();
 
 			function init() {
 				// Renderer
@@ -157,8 +150,6 @@
 
 			function render() {
 				renderer.clear();
-
-				rat.position.set(rat.position.x, rat.position.y+positionVariance(), cat.position.z)
 
 				if (sideCameraEnabled)
 					renderer.render(scene, sideCamera);
