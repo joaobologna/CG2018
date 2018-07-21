@@ -7,7 +7,7 @@ Este repositório é o projeto da disciplina de **Computação Gráfica** (atual
 ## Integrantes:
 - João Paulo Bologna - 609684
 - João Paulo Franscisco de Paula - 587370
-- Matteus Takeshi Dias - 587400
+- Matteus Takeshi Dias (OmTsTM) - 587400
 
 
 ## Objetivo:
@@ -19,20 +19,27 @@ Fase 2: Nesta fase foi inserido um novo objeto 3D (optamos por um rato), realiza
 
 ![](fase2.png)
 
-Fase 3: Inserindo possibilidade de chavear entre câmeras. 
-* Pressionando 1 - Câmera lateral. 
+Fase 3: Nesta fase inserimos dois novos objetos: um queijo e uma faca; somando um total de 4 objetos diferentes na cena. 
+É possivel chavear entre câmeras (visão lateral e superior dos objetos) com: 
+* Pressionando 1 - Câmera lateral;
 * Pressionando 2 - Câmera superior.
+
+* Aplicação da iluminação Phong sobre os objetos: rato e gato.
+Fonte utilizada: https://github.com/sneha-belkhale/threejs-shader-demo (também é referenciada dentro do código).
+
+* Criação de curvas (CatmullRomCurve) para que os objetos descrevam um movimento sobre elas.
+
+![](fase3.png)
+![](fase3_2.png)
+![](fase3_3.png)
 
 
 ## Implementação:
 O código foi feito em JavaScript, com auxílio da API [Three.js] (a qual facilita o trabalho com objetos 3D).
 
-Inicialmente nosso objeto foi baixado do site [Free3D] e posteriormente convertido para json.
+Inicialmente nosso objeto foi baixado do site [Free3D] e posteriormente convertido para json (também fazemos o uso de .obj's para outras funções dentro do projeto).
 
-Para permitir uma melhor visualização do objeto, foi aplicado redimensionamento e implementada uma rotação com velocidade constante.
-
-É possivel realizar a rotação de um objeto (o gato) pelo teclado utilizado: A, S, D, W.
-
+Para permitir uma melhor visualização do objeto, foi aplicado redimensionamento e implementada uma rotação com velocidade constante a alguns casos.
 
 ## Como executar:
 Para rodar o projeto é necessário que o navegador permita a execução de arquivo externo à pagina HTML (necessário para carregar o objeto).
@@ -50,5 +57,6 @@ Siga os passos listados abaixo, em seu navegador de preferência:
 - no Linux execute o comando: google-chrome --allow-file-access-from-files
 - Abra o arquivo index.html que está na raiz do projeto
 
+Algumas referências importantes:
 [Three.js]: <https://threejs.org/>
 [Free3D]: <https://free3d.com/>
