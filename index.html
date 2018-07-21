@@ -32,6 +32,27 @@
 			var sideCameraEnabled = true;
 			var cat, rat, knife, cheese;			
 
+			var curveCat = new THREE.CatmullRomCurve3([
+				new THREE.Vector3( 0, 0, -5 ),
+				new THREE.Vector3( -5, 2, 5 ),
+				new THREE.Vector3( 15, 0, 0 )
+			] );
+			var curveRat = new THREE.CatmullRomCurve3([
+				new THREE.Vector3( -5, 5, 5 ),
+				new THREE.Vector3( 7, 0, 0 ),
+				new THREE.Vector3( -10, 1, 10 ),
+			] );
+			curveRat.closed = curveCat.closed = true; // fecha os caminho
+			var geometryRat = new THREE.Geometry();
+			var geometryCat = new THREE.Geometry();
+			geometryRat.vertices = curveRat.getPoints(100);
+			geometryCat.vertices = curveCat.getPoints( 200 );
+			var materialRat = new THREE.LineBasicMaterial( { /*color : 0xa9c41e*/ transparent: true, opacity: 0 } );
+			var materialCat = new THREE.LineBasicMaterial( { /*color : 0x11c22e*/ transparent: true, opacity: 0 } );
+			pathAlongCurveRat = new THREE.Line( geometryRat, materialRat );
+			pathAlongCurveCat = new THREE.Line( geometryCat, materialCat );
+			var t = 0;
+
 			init();		
 
 			function init() {
@@ -40,16 +61,18 @@
 				
 				// Camera com visão superior
 				upCamera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 1000);
-				upCamera.position.set(5, 25, -10);
+				upCamera.position.set(5, 30, -10);
 				upCamera.rotation.x = -90 * Math.PI / 180;
 
 				// Camera com visão lateral
 				sideCamera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 1000);
-				sideCamera.position.set(5, 0.6, 10);
+				sideCamera.position.set(5, 0.6, 15);
 			
 				// Cena
 				scene = new THREE.Scene();
-				
+				scene.add(pathAlongCurveRat);
+				scene.add(pathAlongCurveCat);
+
 				var uniforms = ({
 					timeDelta : {type: 'f', value: 0},
 					emissive : {type: 'c', value: new THREE.Color(0x5e807f)},
@@ -160,6 +183,12 @@
 
 			function render() {
 				renderer.clear();
+
+				t += 0.001;
+				var posRat =  curveRat.getPoint(t);
+				rat.position.set(posRat.x, posRat.y, posRat.z);
+				var posCat =  curveCat.getPoint(t);
+				cat.position.set(posCat.x, posCat.y, posCat.z);
 
 				if (sideCameraEnabled)
 					renderer.render(scene, sideCamera);
