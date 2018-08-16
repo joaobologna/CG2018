@@ -11,23 +11,23 @@ Este repositório é o projeto da disciplina de **Computação Gráfica** (atual
 
 
 ## Objetivo:
-Fase 1: Nesta fase, um objeto 3D (optamos por um gato obeso), de tamanho ideal para o volume de visão, é exibido na tela, conforme ilustrado:
+### Fase 1: Nesta fase, um objeto 3D (optamos por um gato obeso), de tamanho ideal para o volume de visão, é exibido na tela, conforme ilustrado:
 
 ![](fase1.png)
 
-Fase 2: Nesta fase foi inserido um novo objeto 3D (optamos por um rato), realizado transformação de escala e rotação dos objetos, além da implementação de deslocamento da câmera ao redor dos objetos, conforme ilustrado:
+### Fase 2: Nesta fase foi inserido um novo objeto 3D (optamos por um rato), realizado transformação de escala e rotação dos objetos, além da implementação de deslocamento da câmera ao redor dos objetos, conforme ilustrado:
 
 ![](fase2.png)
 
-Fase 3: Nesta fase inserimos dois novos objetos: um queijo e uma faca; somando um total de 4 objetos diferentes na cena. 
+### Fase 3: Nesta fase inserimos dois novos objetos: um queijo e uma faca, somando um total de 4 objetos diferentes na cena. 
 É possivel chavear entre câmeras (visão lateral e superior dos objetos) com: 
 * Pressionando 1 - Câmera lateral;
 * Pressionando 2 - Câmera superior.
 
-* Aplicação da iluminação Phong sobre os objetos: rato e gato.
+Aplicação da iluminação Phong sobre os objetos: rato e gato.
 Fonte utilizada: https://github.com/sneha-belkhale/threejs-shader-demo (também é referenciada dentro do código).
 
-* Criação de curvas (CatmullRomCurve) para que os objetos descrevam um movimento sobre elas.
+Criação de curvas (CatmullRomCurve) para que os objetos descrevam um movimento sobre elas.
 
 ![](fase3.png)
 ![](fase3_2.png)
@@ -56,6 +56,7 @@ Siga os passos listados abaixo, em seu navegador de preferência:
 - no Windows execute o comando: chrome --allow-file-access-from-files
 - no Linux execute o comando: google-chrome --allow-file-access-from-files
 - Abra o arquivo index.html que está na raiz do projeto
+
 
 Algumas referências importantes:
 [Three.js]: <https://threejs.org/>
