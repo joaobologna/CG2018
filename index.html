@@ -11,6 +11,7 @@
 		<script src="js/three.js"></script>
 		<script src="js/THREEx.KeyboardState.js"></script>
 		<script src="js/OBJLoader.js"></script>
+		<script src="js/MTLLoader.js"></script>
 		
 		<!-- Fonte utilizada para o Phong: https://github.com/sneha-belkhale/threejs-shader-demo -->
 		<script id="vertexShader" src="js/phong.js" type="x-shader/x-vertex">
@@ -65,7 +66,7 @@
 				
 				// Camera com visão superior
 				upCamera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 1000);
-				upCamera.position.set(5, 30, -10);
+				upCamera.position.set(5, 30, -30);
 				upCamera.rotation.x = -90 * Math.PI / 180;
 
 				// Camera com visão lateral
@@ -83,6 +84,7 @@
 				// Adicionando chão
 				mount_ground(scene, manager);
 
+
 				var uniforms = ({
 					timeDelta : {type: 'f', value: 0},
 					emissive : {type: 'c', value: new THREE.Color(0x5e807f)},
@@ -92,10 +94,12 @@
 				
 				var mUniforms = THREE.UniformsUtils.merge([phongShader.uniforms, uniforms]);
 
-				load_obj2('obj/cat.obj', [10, 4, 4], [-4, 0, 0], [0, 1.6, 0]);
+				render_obj(scene, 'cat', { x: -20, y: -13, z: -20}, {x: 10, y:10, z: 10}, {x: 0, y: 1.6, z: 0});
+				render_obj(scene, 'rat', { x: 10, y: -13, z: -20}, {x: 1, y: 1, z: 1}, {x: 0, y: 1.6, z: 0});
+				render_obj(scene, 'cheese', { x: 20, y: -13, z: -20}, {x: 0.5, y: 0.5, z: 0.5}, {x: 0, y: 1.6, z: 0});
+				render_obj(scene, 'knife', { x: 21, y: -7, z: -17}, {x: 0.015, y: 0.015, z: 0.015}, {x: 10, y: 0, z: 0});
+				load_obj2('obj/cat.obj', [0.8, 1, 1], [4, 0, 0], [0, 1.6, 0]);
 				load_obj2('obj/rat.obj', [0.8, 1, 1], [4, 0, 0], [0, 1.6, 0]);
-				load_obj('json/knife.js', [0.007, 0.007, 0.007], [10, 2, 2], [10, 0, 0]);
-				load_obj('json/cheese.js', [0.2, 0.2, 0.2], [10, 0, -2], [0, 0 ,0]);
 
 				function create_renderer() {
 					var myCanvas = document.getElementById('myCanvas');
@@ -111,6 +115,29 @@
 					renderer.setSize(window.innerWidth, window.innerHeight);
 					
 					return renderer;				
+				}
+
+				function render_obj(scene, obj, position, dimensions, rotation) {
+					new THREE.OBJLoader()
+						.load('assets/' + obj + '/' + obj + '.obj', function (object) {
+			        		object.traverse(function (child) {
+			            		if (child instanceof THREE.Mesh) {
+			            			var texture = new THREE.TextureLoader().load('assets/' + obj + '/' + obj + '.png');
+    				                child.material.map = texture;
+					                child.castShadow = true;
+			        		        child.receiveShadow = true;
+			            		}
+
+					        object.position.x = position.x;
+					        object.position.y = position.y;
+					        object.position.z = position.z;
+					        object.rotation.x = rotation.x;
+					        object.rotation.y = rotation.y;
+					        object.rotation.z = rotation.z;
+					        object.scale.set(dimensions.x, dimensions.y, dimensions.z); 
+					        scene.add( object );
+			        		})
+			        	});
 				}
 
 				function load_obj2(path, dimensions, position, rotation) {
@@ -163,6 +190,7 @@
 					var light = new THREE.PointLight(0xa5ccff, 1);
 					light.position.set(300,300,0);
 					scene.add(light);
+					scene.add(new THREE.AmbientLight(0x222222));
 				}
 
 				function mount_ground(scene, manager) {
@@ -220,14 +248,12 @@
 			// adiciona os objetos na cena apenas quando todos forem carregados
 			function preAnimate(){
 					setTimeout(function () {
-						if(cat == null || rat == null || knife  == null || cheese  == null){
+						if(cat == null || rat == null){
 							preAnimate();
 						}
 						else{
 							scene.add(cat);
 							scene.add(rat);
-							scene.add(knife);
-							scene.add(cheese);
 							animate();
 						}
 					}, 1); // timeout (em ms), gasto quantas vezes forem necessárias, para que os objetos sejam carregados antes de serem utilizados
