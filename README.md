@@ -38,6 +38,12 @@ Todos os objetos podem ser encontrados em [Free3D](https://free3d.com/), assim c
 
 Extra: Particula!
 
+## Como interagir:
+
+Pressionando as teclas **1** e **2** é possível realizar a mudança do ponto de vista (câmera). Existe duas configurações, uma que demonstra a cena de uma visão lateral e a segunda de maneira superior.
+
+É possível simular a acelaração do tempo com a tecla **q** e desacelerar com a tecla **w**.
+
 ## Como executar:
 Para rodar o projeto é necessário que o navegador permita a execução de arquivo externo à pagina HTML (necessário para carregar o objeto).
 
