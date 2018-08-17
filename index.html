@@ -12,6 +12,7 @@
 		<script src="js/THREEx.KeyboardState.js"></script>
 		<script src="js/OBJLoader.js"></script>
 		<script src="js/MTLLoader.js"></script>
+		<script src="js/Particle.js"></script>
 		
 		<!-- Fonte utilizada para o Phong: https://github.com/sneha-belkhale/threejs-shader-demo -->
 		<script id="vertexShader" src="js/phong.js" type="x-shader/x-vertex">
@@ -33,28 +34,19 @@
 		<script>
 			var keyboard = new THREEx.KeyboardState();
 			var sideCameraEnabled = true;
-			var cat, rat;			
+			var t = 0.05, t2 = 0.59;
+			var sun, moon;			
 
-			var curveCat = new THREE.CatmullRomCurve3([
-				new THREE.Vector3( 0, 0, -5 ),
-				new THREE.Vector3( -5, 2, 5 ),
-				new THREE.Vector3( 15, 0, 0 )
+			var curve = new THREE.CatmullRomCurve3([
+				new THREE.Vector3(-500, -50, -500),
+				new THREE.Vector3(2, 150, -500),
+				new THREE.Vector3(500, -50, -500)
 			] );
-			var curveRat = new THREE.CatmullRomCurve3([
-				new THREE.Vector3( -5, 5, 5 ),
-				new THREE.Vector3( 7, 0, 0 ),
-				new THREE.Vector3( -10, 1, 10 ),
-			] );
-			curveRat.closed = curveCat.closed = true; // fecha os caminho
-			var geometryRat = new THREE.Geometry();
-			var geometryCat = new THREE.Geometry();
-			geometryRat.vertices = curveRat.getPoints(100);
-			geometryCat.vertices = curveCat.getPoints( 200 );
-			var materialRat = new THREE.LineBasicMaterial( { /*color : 0xa9c41e*/ transparent: true, opacity: 0 } );
-			var materialCat = new THREE.LineBasicMaterial( { /*color : 0x11c22e*/ transparent: true, opacity: 0 } );
-			pathAlongCurveRat = new THREE.Line( geometryRat, materialRat );
-			pathAlongCurveCat = new THREE.Line( geometryCat, materialCat );
-			var t = 0;
+			curve.closed = true; // fecha os caminho
+			var geometry = new THREE.Geometry();
+			geometry.vertices = curve.getPoints(200);
+			var material = new THREE.LineBasicMaterial({ transparent: true, opacity: 0 });
+			pathAlongCurve = new THREE.Line(geometry, material);
 
 			init();		
 
@@ -73,15 +65,13 @@
 			
 				// Cena
 				scene = new THREE.Scene();
-				scene.add(pathAlongCurveRat);
-				scene.add(pathAlongCurveCat);
+				scene.add(pathAlongCurve);
 				
 				// Iluminacao
 				mount_shader(scene);
 
 				// Adicionando chão
 				mount_ground(scene);
-
 
 				var uniforms = ({
 					timeDelta : {type: 'f', value: 0},
@@ -92,12 +82,13 @@
 				
 				var mUniforms = THREE.UniformsUtils.merge([phongShader.uniforms, uniforms]);
 
-				render_obj(scene, 'cat', { x: -20, y: -13, z: -20}, {x: 10, y:10, z: 10}, {x: 0, y: 1.6, z: 0});
-				render_obj(scene, 'rat', { x: 10, y: -13, z: -20}, {x: 1, y: 1, z: 1}, {x: 0, y: 1.6, z: 0});
-				render_obj(scene, 'cheese', { x: 20, y: -13, z: -20}, {x: 0.5, y: 0.5, z: 0.5}, {x: 0, y: 1.6, z: 0});
-				render_obj(scene, 'knife', { x: 21, y: -7, z: -17}, {x: 0.015, y: 0.015, z: 0.015}, {x: 10, y: 0, z: 0});
-				load_obj2('obj/cat.obj', [0.8, 1, 1], [4, 0, 0], [0, 1.6, 0]);
-				load_obj2('obj/rat.obj', [0.8, 1, 1], [4, 0, 0], [0, 1.6, 0]);
+				render_obj(scene, 'cat', {x: -20, y: -13, z: -20}, {x: 10, y:10, z: 10}, {x: 0, y: 1.6, z: 0});
+				render_obj(scene, 'rat', {x: 10, y: -13, z: -20}, {x: 1, y: 1, z: 1}, {x: 0, y: 1.6, z: 0});
+				render_obj(scene, 'cheese', {x: 20, y: -13, z: -20}, {x: 0.5, y: 0.5, z: 0.5}, {x: 0, y: 1.6, z: 0});
+				render_obj(scene, 'knife', {x: 21, y: -7, z: -17}, {x: 0.015, y: 0.015, z: 0.015}, {x: 10, y: 0, z: 0});
+				render_obj(scene, 'sun', {x: 0, y: -0, z: -0}, {x: 10, y: 10, z: 10}, {x: 0, y: 0, z: 0});
+				render_obj(scene, 'moon', {x: 0, y: -0, z: -0}, {x: 10, y: 10, z: 10}, {x: 0, y: 0, z: 0});
+
 
 				function create_renderer() {
 					var myCanvas = document.getElementById('myCanvas');
@@ -133,7 +124,12 @@
 					        object.rotation.y = rotation.y;
 					        object.rotation.z = rotation.z;
 					        object.scale.set(dimensions.x, dimensions.y, dimensions.z); 
-					        scene.add( object );
+					        scene.add(object);
+
+					        if(obj == 'sun')
+					        	sun = object;
+					        if(obj == 'moon')
+					        	moon = object;
 			        		})
 			        	});
 				}
@@ -144,7 +140,7 @@
 								vertexShader: document.getElementById( 'vertexShader' ).textContent,
 								fragmentShader: phongShader.fragmentShader,
 								lights: true,
-								side : THREE.DoubleSide
+								side: THREE.DoubleSide,
 							});
 				  var mesh2;
 				  var loader = new THREE.OBJLoader();
@@ -152,7 +148,6 @@
 				  loader.load(path, function ( object ) {
 				    object.traverse( function ( child ) {
 				      if ( child instanceof THREE.Mesh ) {
-				        console.log(child.geometry)
 				        var geo1 = child.geometry;
 				        mesh2 = new THREE.Mesh(geo1, mesh2Material);
 
@@ -164,21 +159,6 @@
 								mesh2.rotation.y = rotation[1];
 								mesh2.rotation.z = rotation[2];
 								scene.position.z = -10;
-
-								switch(path){
-									case 'obj/cat.obj':
-										cat = mesh2;
-									break;
-									case 'obj/rat.obj':
-										rat = mesh2;
-									break;
-									case 'obj/knife.obj':
-										knife = mesh2;
-									break;
-									case 'obj/cheese.obj':
-										cheese = mesh2;
-									break;
-								}
 				      }
 				    });
 				  })
@@ -206,55 +186,21 @@
 				    scene.add(ground);
 				}
 
-				function load_obj(path, dimensions, position, rotation) {
-					loader = new THREE.JSONLoader();
-					loader.load(path, handle_load);
-			
-					function handle_load(geometry, materials) {
-						materials = new THREE.MeshNormalMaterial();
-						mesh = new THREE.Mesh(geometry, materials);
-						mesh.scale.set(dimensions[0], dimensions[1], dimensions[2]); // alteração do tamanho do objeto
-						mesh.position.x = position[0];
-						mesh.position.y = position[1];
-						mesh.position.z = position[2];	
-						mesh.rotation.x = rotation[0];
-						mesh.rotation.y = rotation[1];
-						mesh.rotation.z = rotation[2];
-						scene.position.z = -10;
-						//scene.add(mesh);
-
-						switch(path){
-							case 'json/cat.json':
-								cat = mesh;
-							break;
-							case 'json/rat.js':
-								rat = mesh;
-							break;
-							case 'json/knife.js':
-								knife = mesh;
-							break;
-							case 'json/cheese.js':
-								cheese = mesh;
-							break;
-						}
-					}
-				}
-
 				preAnimate();
 			}
 			
 			// adiciona os objetos na cena apenas quando todos forem carregados
 			function preAnimate(){
-					setTimeout(function () {
-						if(cat == null || rat == null){
-							preAnimate();
-						}
-						else{
-							scene.add(cat);
-							scene.add(rat);
-							animate();
-						}
-					}, 1); // timeout (em ms), gasto quantas vezes forem necessárias, para que os objetos sejam carregados antes de serem utilizados
+				setTimeout(function () {
+					if(sun == null || moon == null){
+						preAnimate();
+					}
+					else{
+						scene.add(sun);
+						scene.add(moon);
+						animate();
+					}
+				}, 1); // timeout (em ms), gasto quantas vezes forem necessárias, para que os objetos sejam carregados antes de serem utilizados
 			}
 
 
@@ -264,7 +210,6 @@
 			function animate() {
 				timeDelta = Date.now() - startTime;
 				requestAnimationFrame(animate);
-				// catMesh.material.uniforms.timeDelta.value = timeDelta;
 
 				if (keyboard.pressed("1"))
 					sideCameraEnabled = true;
@@ -278,10 +223,12 @@
 				renderer.clear();
 
 				t += 0.001;
-				var posRat =  curveRat.getPoint(t);
-				rat.position.set(posRat.x, posRat.y, posRat.z);
-				var posCat =  curveCat.getPoint(t);
-				cat.position.set(posCat.x, posCat.y, posCat.z);
+				t2 += 0.001;
+				console.log(t);
+				var sunPosition =  curve.getPoint(t);
+				var moonPosition = curve.getPoint(t2);
+				sun.position.set(sunPosition.x, sunPosition.y, sunPosition.z);
+				moon.position.set(moonPosition.x, moonPosition.y, moonPosition.z);
 
 				if (sideCameraEnabled)
 					renderer.render(scene, sideCamera);
