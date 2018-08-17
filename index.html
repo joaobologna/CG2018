@@ -35,7 +35,8 @@
 			var keyboard = new THREEx.KeyboardState();
 			var sideCameraEnabled = true;
 			var t = 0.05, t2 = 0.59;
-			var sun, moon;			
+			var sun, moon;
+			var directionalLight;			
 
 			var curve = new THREE.CatmullRomCurve3([
 				new THREE.Vector3(-500, -50, -500),
@@ -165,10 +166,10 @@
 				}
 
 				function mount_shader(scene) {
-					var light = new THREE.PointLight(0xa5ccff, 1);
-					light.position.set(300,300,0);
-					scene.add(light);
-					scene.add(new THREE.AmbientLight(0x222222));
+					scene.add(new THREE.AmbientLight(0x666666));
+					directionalLight = new THREE.DirectionalLight(0xdfebff, 1.75);
+				    directionalLight.castShadow = true;				    				    
+				    scene.add(directionalLight);
 				}
 
 				function mount_ground(scene) {
@@ -224,11 +225,11 @@
 
 				t += 0.001;
 				t2 += 0.001;
-				console.log(t);
 				var sunPosition =  curve.getPoint(t);
 				var moonPosition = curve.getPoint(t2);
 				sun.position.set(sunPosition.x, sunPosition.y, sunPosition.z);
 				moon.position.set(moonPosition.x, moonPosition.y, moonPosition.z);
+				directionalLight.position.copy(curve.getPoint(t));
 
 				if (sideCameraEnabled)
 					renderer.render(scene, sideCamera);
