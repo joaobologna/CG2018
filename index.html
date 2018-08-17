@@ -36,7 +36,8 @@
 			var sideCameraEnabled = true;
 			var t = 0.05, t2 = 0.59;
 			var sun, moon;
-			var directionalLight;			
+			var directionalLight;	
+			var particleGroup;		
 
 			var curve = new THREE.CatmullRomCurve3([
 				new THREE.Vector3(-500, -50, -500),
@@ -73,6 +74,9 @@
 
 				// Adicionando chão
 				mount_ground(scene);
+
+				// Pariculas
+				mount_particle(scene);
 
 				var uniforms = ({
 					timeDelta : {type: 'f', value: 0},
@@ -174,7 +178,7 @@
 
 				function mount_ground(scene) {
 					var textureLoader = new THREE.TextureLoader();
-				    var texture = textureLoader.load("texture/grass.png");
+				    var texture = textureLoader.load("assets/grass/grass.png");
 				    var material = new THREE.MeshLambertMaterial({ map: texture });
 				    texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
 				    texture.repeat.set(256, 256);
@@ -185,6 +189,55 @@
 				    ground.receiveShadow = true;
 				    ground.castShadow = true;
 				    scene.add(ground);
+				}
+
+				function mount_particle(scene) {
+				    particleGroup = new SPE.Group({
+				        texture: {
+				            value: THREE.ImageUtils.loadTexture('assets/smoke/smoke.png')
+				        },
+				        blending: THREE.NormalBlending
+				    });
+				        
+				    emitter = new SPE.Emitter({
+				        maxAge: {
+				            value: 15
+				        },
+				        position: {
+				            value: new THREE.Vector3(20, -13, -20),
+				            spread: new THREE.Vector3(1, 0.5, 2),
+				        },
+				        acceleration: {
+				            value: new THREE.Vector3(0.01, 0.01, 0.01),
+				            spread: new THREE.Vector3(0.1, 0.1, 0.1)
+				            },
+				        velocity: {
+				            value: new THREE.Vector3(0, 1, -0.5),
+				            spread: new THREE.Vector3(0.25, 0.1, 0.25)
+				        },
+				        color: {
+				            value: [ new THREE.Color(0xffffff), new THREE.Color(0xdddddd) ],
+				            spread: [ new THREE.Vector3(0.1, 0.1, 0.1), new THREE.Vector3(0, 0, 0) ]
+				        },
+				        rotation: {
+				            axis: new THREE.Vector3(0, 1, 0),
+				            spread: new THREE.Vector3(0, 20, 0),
+				            angle: 100 * Math.PI / 90,
+				        },
+				        size: {
+				            value: [ 1, 2 ],
+				            spread: [ 0, 1, 2 ]
+				        },
+				        opacity: {
+				            value: [ 0, 0.1, 0 ]
+				        },
+				        particleCount: 2000,
+				        activeMultiplier: 0.5
+				    });
+				    
+				    particleGroup.addEmitter(emitter);
+				    
+				    scene.add(particleGroup.mesh);
 				}
 
 				preAnimate();
@@ -230,6 +283,8 @@
 				sun.position.set(sunPosition.x, sunPosition.y, sunPosition.z);
 				moon.position.set(moonPosition.x, moonPosition.y, moonPosition.z);
 				directionalLight.position.copy(curve.getPoint(t));
+
+				particleGroup.tick();
 
 				if (sideCameraEnabled)
 					renderer.render(scene, sideCamera);
