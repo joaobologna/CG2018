@@ -38,7 +38,7 @@
 			var sun, moon;
 			var directionalLight;	
 			var particleGroup;		
-
+			var mult = 1;
 			var curve = new THREE.CatmullRomCurve3([
 				new THREE.Vector3(-500, -50, -500),
 				new THREE.Vector3(2, 150, -500),
@@ -276,8 +276,13 @@
 			function render() {
 				renderer.clear();
 
-				t += 0.001;
-				t2 += 0.001;
+				if(keyboard.pressed("q")) 
+					mult += 0.1;
+				if(keyboard.pressed("w"))
+					mult -= 0.1;
+
+				t += 0.001 * mult;
+				t2 += 0.001 * mult;
 				var sunPosition =  curve.getPoint(t);
 				var moonPosition = curve.getPoint(t2);
 				sun.position.set(sunPosition.x, sunPosition.y, sunPosition.z);
